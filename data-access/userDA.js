@@ -10,7 +10,7 @@ async function createNewUser(userData) {
 }
 
 async function deleteUserById(userId) {
-  return await User.deleteOne({ _id: id });
+  return await User.deleteOne({ _id: userId });
 }
 
 module.exports = {

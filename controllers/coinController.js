@@ -18,7 +18,7 @@ exports.getCoins = async (req, res, next) => {
     res.status(200).json(response);
   } catch (err) {
     logger.error(`Error fetching coins: ${err.message}`);
-    res.status(500).json({ errMessage: 'Error', details: err.message });
+    next(err);
   }
 };
 
@@ -27,10 +27,8 @@ exports.getCoin = async (req, res, next) => {
     const response = await coinService.getCoinById(req.params.id);
     res.status(200).json(response);
   } catch (err) {
-    logger.error(
-      `Error fetching coin with ID ${req.params.id}: ${err.message}`
-    );
-    res.status(500).json({ errMessage: 'Error', details: err.message });
+    logger.error(`Error fetching current crypto rates: ${err.message}`);
+    next(err);
   }
 };
 
@@ -43,7 +41,7 @@ exports.getCurrentCryptoRates = async (req, res, next) => {
     res.status(200).json({ currentCryptorates: response });
   } catch (err) {
     logger.error(`Error fetching current crypto rates: ${err.message}`);
-    res.status(500).json({ errMessage: 'Error', details: err.message });
+    next(err);
   }
 };
 
@@ -61,6 +59,6 @@ exports.getHistoricalCharts = async (req, res, next) => {
 
     res.status(200).json({ history: response });
   } catch (err) {
-    res.status(500).json({ errMessage: 'Error', details: err.message });
+    next(err);
   }
 };

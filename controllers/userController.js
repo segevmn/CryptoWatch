@@ -9,7 +9,6 @@
  */
 
 const userService = require('../services/userService');
-const logger = require('../utils/logger');
 
 exports.getWatchlist = async (req, res, next) => {
   try {
@@ -18,9 +17,7 @@ exports.getWatchlist = async (req, res, next) => {
 
     res.status(200).json({ watchlist: userWatchlist });
   } catch (err) {
-    res
-      .status(err.message.includes('No watchlist entries') ? 404 : 500)
-      .json({ errmsg: err.message });
+    next(err);
   }
 };
 
@@ -40,8 +37,7 @@ exports.addToWatchlist = async (req, res, next) => {
       watchlist: updatedWatchlist,
     });
   } catch (err) {
-    logger.error(`Error adding coin to watchlist: ${err.message}`);
-    res.status(500).json({ errMessage: 'Error adding coin to watchlist' });
+    next(err);
   }
 };
 
@@ -52,7 +48,6 @@ exports.deleteUser = async (req, res, next) => {
 
     res.status(200).json({ msg: 'User deleted successfully' });
   } catch (err) {
-    logger.error(`Error deleting user: ${err.message}`);
-    res.status(500).json({ errMessage: 'Error deleting user' });
+    next(err);
   }
 };

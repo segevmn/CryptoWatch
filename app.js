@@ -34,6 +34,7 @@ const cookieParser = require('cookie-parser');
 
 const logger = require('./utils/logger');
 const { getEnvVar } = require('./config');
+const apiErrorHandler = require('./middleware/errorHandler');
 
 // Set up environment variables
 const NODE_ENV = getEnvVar('NODE_ENV', 'development');
@@ -98,13 +99,7 @@ const apiRoutes = require('./routes');
 app.use(apiRoutes);
 
 // ✅ Global error handling middleware
-app.use((err, req, res, next) => {
-  logger.error(err);
-  if (res.headersSent) return next(err);
-  res.status(err.statusCode || 500).json({
-    message: err.message || 'Internal server error.',
-  });
-});
+app.use(apiErrorHandler);
 
 // Error handling middleware for development environment
 // ✅ Development error stacktrace

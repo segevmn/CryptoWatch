@@ -1,6 +1,10 @@
 const fetch = require('node-fetch');
 
 const { getEnvVar } = require('../config');
+const { fetchCurrentPrices } = require('../adapters/coinGeckoAdapter');
+const { withCache } = require('../utils/simpleCache');
+
+const fetchCurrentPricesCached = withCache(fetchCurrentPrices, 30);
 
 const baseURL = getEnvVar('COINGECKO_API_URL');
 
@@ -18,11 +22,9 @@ const coinService = {
   },
 
   getCurrentCryptoRates: async symbols => {
-    const response = await fetch(
-      `${baseURL}/simple/price?ids=${symbols}&vs_currencies=usd`
-    );
-    if (!response.ok) throw new Error('Failed to fetch current crypto rates');
-    return await response.json();
+    const ids = symbols.split(',');
+    const response = await fetchCurrentPricesCached(ids, ['usd']);
+    return response;
   },
 
   getHistoricalCharts: async (id, vs_currency, days) => {

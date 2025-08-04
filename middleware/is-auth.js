@@ -20,9 +20,8 @@ exports.isAuth = (req, res, next) => {
   try {
     const token = req.cookies.token;
 
-    if (!token) {
-      return res.status(401).json({ message: 'No token provided' });
-    }
+    if (!token) return res.status(401).json({ message: 'No token provided' });
+
     // Verify the token using JWT_SECRET
     const decodedToken = jwt.verify(token, JWT_SECRET);
     req.user = {

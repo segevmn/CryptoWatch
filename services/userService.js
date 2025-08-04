@@ -1,5 +1,7 @@
 const userDataAccess = require('../data-access/userDA');
 const watchlistDataAccess = require('../data-access/watchlistDA');
+const logger = require('../utils/logger');
+const { NotFoundError, ValidationError } = require('../utils/errors');
 
 const userService = {
   getUserWatchlist: async userId => {
@@ -7,7 +9,7 @@ const userService = {
       userId
     );
     if (!watchlistEntries) {
-      throw new Error('No watchlist entries found for this user');
+      throw NotFoundError('No watchlist entries found for this user');
     }
     return watchlistEntries.coins;
   },
@@ -20,7 +22,7 @@ const userService = {
     }
 
     if (watchlist.coins.some(c => c.id === coin.id)) {
-      throw new Error('Coin is already in watchlist');
+      throw ValidationError('Coin is already in watchlist');
     }
 
     watchlist.coins.push(coin);
@@ -31,7 +33,7 @@ const userService = {
   deleteUser: async userId => {
     const result = await userDataAccess.deleteUserById(userId);
     if (result.deletedCount === 0) {
-      throw new Error('User not found');
+      throw NotFoundError('User not found');
     }
     await watchlistDataAccess.deleteWatchlistByUserId(userId);
     logger.info(`User ${userId} and watchlist deleted`);

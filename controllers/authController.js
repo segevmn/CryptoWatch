@@ -37,10 +37,8 @@ exports.postLogin = async (req, res, next) => {
       .status(200)
       .json({ message: 'Login successful' });
   } catch (err) {
-    logger.error(`Login failed for user ${email}: ${err.message}`);
-    res.status(401).json({
-      message: 'Invalid email or password',
-    });
+    logger.warn(`Login failed for user ${email}: ${err.message}`);
+    next(err);
   }
 };
 
@@ -59,9 +57,7 @@ exports.postSignup = async (req, res, next) => {
     });
     res.status(201).json({ message: 'Signup successful' });
   } catch (err) {
-    logger.error(`Signup failed for user ${email}: ${err.message}`);
-    res.status(422).json({
-      message: 'User already exists or invalid data',
-    });
+    logger.warn(`Signup failed for user ${email}: ${err.message}`);
+    next(err);
   }
 };
