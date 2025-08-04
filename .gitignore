@@ -1,1 +1,5 @@
 node_modules
+.env
+package-lock.json
+CryptoRates.postman_collection.json
+CryptoRates.postman_environment.json
